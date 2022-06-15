@@ -1,12 +1,17 @@
 import getopt
 import sys
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.chrome import ChromeType
+from pynput.keyboard import Key, Controller
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 ######## GLOBAL VARIABLES ########
 USERNAME = ''
@@ -46,14 +51,16 @@ def login(username: str, password: str):
     pass_box.clear()
     pass_box.send_keys(PASS)
 
-    login_button = WebDriverWait(browser, 60).until((EC.presence_of_element_located((By.XPATH, '/html/body/div/div[3]/form/button'))))
+    login_button = WebDriverWait(browser, 60).until((EC.element_to_be_clickable((By.XPATH, '/html/body/div/div[3]/form/button'))))
     login_button.click()
+    time.sleep(30)
 
+
+def check_shifts():
+    print('Checking Wednesday of next week...')
+    browser.execute_script('document.querySelector("#app > div.Page-jLerck.lbYCSx > div.WeeklyViewDate__StyledWeeklyView-kvcNig.jKzTST > div > div:nth-child(11)").click()')
     while True:
         pass
-
-def scroll_next_week():
-    pass
 
 
 # Setup browser
@@ -65,6 +72,7 @@ browser.implicitly_wait(10)
 browser.get("https://fi.usehurrier.com/app/rooster/web/login")
 readArgs()
 login(USERNAME, PASS)
+check_shifts()
 
 # Teardown browser and close
 browser.close()
